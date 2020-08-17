@@ -121,3 +121,22 @@ this was fixed by going into the ansible.cfg file and entering (hosts_key...)
 however, this wasn't necessary as I later took it out and it still worked
 
 ![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d3f34a4c-d3fb-4c42-bbfb-955825471813/Screen_Shot_2020-08-17_at_15.03.33.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d3f34a4c-d3fb-4c42-bbfb-955825471813/Screen_Shot_2020-08-17_at_15.03.33.png)
+
+
+# Ansible Ad-Hoc Commands
+
+## To view IP address of all machines
+ansible all -m shell -a "ifconfig"
+
+
+## To check uptime of all machines
+ansible all -m shell -a uptime
+
+## To see all environment variables
+ansible all -m shell -a env
+
+## To see free space in each machines
+ansible all -a "free -m"
+
+## To see all running processes
+ansible all -m shell -a "ps -aux"
