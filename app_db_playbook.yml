@@ -1,3 +1,5 @@
+
+
 # This is a YAML file to install nginx onto oue web VM using YAML
 ---
 
@@ -26,9 +28,9 @@
   - name: Insert multiple lines and Backup
     blockinfile:
       path: /etc/mongodb.conf
-      backup: yes
       block: |
-        "storage:
+        # mongodb.conf
+        storage:
           dbPath: /var/lib/mongodb
           journal:
             enabled: true
@@ -39,7 +41,12 @@
 
         net:
           port: 27017
-          bindIp: 0.0.0.0"
+          bindIp: 0.0.0.0
+
+#  - ec2_ami:
+ #     instance_id: i-06d97a66a13203739
+  #    wait: no
+   #   name: Eng67.Ibrahim.VPC.DB.Image
 
 
 # where do we want to install
@@ -57,6 +64,7 @@
   tasks:
   - name: Install nginx
     apt: pkg=nginx state=present
+    become_user: root
 
   - name: Remove nginx deafault file (delete file)
     file:
@@ -73,7 +81,6 @@
   - name: Insert multiple lines and Backup
     blockinfile:
       path: /etc/nginx/sites-enabled/reverseproxy.conf
-      backup: yes
       block: |
         server{
           listen 80;
@@ -89,6 +96,14 @@
       dest: /etc/nginx/sites-available/reverseproxy.conf
       state: link
 
+  - name: nginx bug workaround
+    shell: |
+      sudo mkdir /etc/systemd/system/nginx.service.d
+        printf "[Service]\nExecStartPost=/bin/sleep 0.1\n" | \
+          sudo tee /etc/systemd/system/nginx.service.d/override.conf
+      sudo systemctl daemon-reload
+      sudo systemctl restart nginx
+
   - name: Install nodejs
     apt: pkg=nodejs state=present
 
@@ -101,11 +116,20 @@
       name: pm2
       global: yes
 
-  - name: seed database
-    command: node app/seeds/seed.js
+  - name: download latest npm
+    shell: |
+      npm install -g npm@latest
+      npm install mongoose -y
+
+
+  - name: set up app
+    shell: |
+      cd app/
+      npm install
+      node seeds/seed.js
+      pm2 kill
+      pm2 start app.js
     environment:
       DB_HOST: mongodb://vagrant@192.168.33.11:27017/posts?authSource=admin
+    become_user: root
 
-
-  - name: start app
-    command: pm2 restart app/app.js

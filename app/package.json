@@ -6,16 +6,17 @@
   "scripts": {
     "postinstall": "node seeds/seed.js",
     "start": "node app.js",
-    "test": "./node_modules/mocha/bin/mocha --exit"
+    "test": "./node_modules/mocha/bin/mocha"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ejs": "^2.5.2",
-    "express": "^4.14.0",
+    "ejs": "^2.7.4",
+    "express": "^4.17.1",
     "faker": "^4.1.0",
-    "mongodb": "^3.1.13",
-    "mongoose": "^5.9.25"
+    "mongodb": "^3.6.0",
+    "mongoose": "^5.10.0",
+    "type-detect": "^4.0.8"
   },
   "devDependencies": {
     "chai": "^3.5.0",

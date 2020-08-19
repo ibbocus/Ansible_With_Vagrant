@@ -26,4 +26,3 @@ if(process.env.DB_HOST) {
   }
 }
 
-

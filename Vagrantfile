@@ -47,7 +47,7 @@ Vagrant.configure("2") do |config|
     #   assigning private IP
     
     # Importing app files
-    web.vm.synced_folder "app/", "/home/vagrant/"
+    web.vm.synced_folder "app/", "/home/vagrant/app"
 
 
     config.hostsupdater.aliases = ["development.web"]
@@ -77,7 +77,7 @@ Vagrant.configure("2") do |config|
     aws.vm.hostname = 'aws'
     
     aws.vm.network :private_network, ip: "192.168.33.12"
-    
+#    aws.vm.provision "shell", path: "ctr_provision.sh", privileged: false
     config.hostsupdater.aliases = ["development.aws"] 
    end
 end
