@@ -2,7 +2,7 @@
 
 vagrant up
 
-scp app_db_playbook.yml vagrant@192.168.33.12:/home/vagrant/
+scp -r playbooks/ vagrant@192.168.33.12:/home/vagrant/
 ssh vagrant@192.168.33.12 << EOF
 
 export ANSIBLE_HOST_KEY_CHECKING=False
@@ -24,10 +24,11 @@ echo "[db]
 echo "[aws]
 192.168.33.12 ansible_connection=ssh ansible_ssh_user=vagrant ansible_ssh_pass=vagrant" >> hosts
 
-sshpass -p 'vagrant' vagrant@192.168.33.11
-sudo apt-get install sshpass -y
 sudo apt-get update -y
 sudo apt-get upgrade -y
+sshpass -p "vagrant" ssh -o stricthostkeychecking=no vagrant@192.168.33.11
+sudo apt-get install sshpass -y
+
 exit
 
 
@@ -38,10 +39,10 @@ EOF
 
 ssh vagrant@192.168.33.10 << EOF
 
-sshpass -p 'vagrant' vagrant@192.168.33.10
-sudo apt-get install sshpass -y
 sudo apt-get update -y
 sudo apt-get upgrade -y
+sshpass -p "vagrant" ssh -o stricthostkeychecking=no vagrant@192.168.33.10
+sudo apt-get install sshpass -y
 
 exit
 
@@ -54,7 +55,7 @@ export ANSIBLE_HOST_KEY_CHECKING=False
 # Copy file into our web vm
 ansible web -m copy -a "src=/home/vagrant/app dest=/home/vagrant"
 # THIS RUNS OUR PLAYBOOK!!
-ansible-playbook app_db_playbook.yml
+ansible-playbook playbooks/app_db_playbook.yml
 
 exit
 
