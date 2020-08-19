@@ -24,14 +24,6 @@ echo "[db]
 echo "[aws]
 192.168.33.12 ansible_connection=ssh ansible_ssh_user=vagrant ansible_ssh_pass=vagrant" >> hosts
 
-# go into web server
-# sshpass -p 'vagrant' vagrant@192.168.33.10
-# sudo apt-get install sshpass -y
-# sudo apt-get update -y
-# sudo apt-get upgrade -y
-# exit
-
-#go into db server
 sshpass -p 'vagrant' vagrant@192.168.33.11
 sudo apt-get install sshpass -y
 sudo apt-get update -y
@@ -46,7 +38,6 @@ EOF
 
 ssh vagrant@192.168.33.10 << EOF
 
-#echo export DB_HOST=mongodb://vagrant@192.168.33.11:27017/posts >> ~/.bashrc
 sshpass -p 'vagrant' vagrant@192.168.33.10
 sudo apt-get install sshpass -y
 sudo apt-get update -y

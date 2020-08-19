@@ -43,6 +43,19 @@
           port: 27017
           bindIp: 0.0.0.0
 
+
+  - name: Restart mongodb
+    become: true
+    shell: systemctl restart mongodb
+
+  - name: enable mongodb
+    become: true
+    shell: systemctl enable mongodb
+
+  - name: start mongodb
+    become: true
+    shell: systemctl start mongodb
+
 #  - ec2_ami:
  #     instance_id: i-06d97a66a13203739
   #    wait: no

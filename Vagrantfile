@@ -19,7 +19,23 @@ end
 
 # MULTI SERVER/VMs environment 
 
- 
+# Setting the function to form an env variable
+def set_env vars
+  command = <<~HEREDOC
+      echo "Setting Environment Variables"
+      source ~/.bashrc
+  HEREDOC
+
+  vars.each do |key, value|
+    command += <<~HEREDOC
+      if [ -z "$#{key}" ]; then
+          echo "export #{key}=#{value}" >> ~/.bashrc
+      fi
+    HEREDOC
+  end
+
+  return command
+end 
 
 Vagrant.configure("2") do |config|
 
@@ -48,7 +64,7 @@ Vagrant.configure("2") do |config|
     
     # Importing app files
     web.vm.synced_folder "app/", "/home/vagrant/app"
-
+    web.vm.provision "shell", inline: set_env({ DB_HOST: "mongodb://vagrant@192.168.33.11:27017/posts" }), privileged: false
 
     config.hostsupdater.aliases = ["development.web"]
     # creating a link called development.web so we can access web page with this link instread of an IP   
@@ -77,7 +93,6 @@ Vagrant.configure("2") do |config|
     aws.vm.hostname = 'aws'
     
     aws.vm.network :private_network, ip: "192.168.33.12"
-#    aws.vm.provision "shell", path: "ctr_provision.sh", privileged: false
     config.hostsupdater.aliases = ["development.aws"] 
    end
 end
